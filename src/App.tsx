@@ -3,7 +3,7 @@ import Login from "./components/Login";
 import SubjectSelection from "./components/SubjectSelection";
 import Exam from "./components/Exam";
 import Result from "./components/Result";
-import type { User, SubjectId } from "./types";
+import type { User, SubjectId } from "./data/types";
 
 export default function App() {
   const [screen, setScreen] = useState<"login" | "subjects" | "exam">("login");
