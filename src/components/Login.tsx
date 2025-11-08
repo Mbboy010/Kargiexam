@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 
-export default function Login({ onLogin }) {
-  const [name, setName] = useState("");
-  const [regNo, setRegNo] = useState("");
+interface LoginProps {
+  onLogin: (userData: { name: string; regNo: string }) => void;
+}
 
-  const handleSubmit = (e) => {
+export default function Login({ onLogin }: LoginProps) {
+  const [name, setName] = useState<string>("");
+  const [regNo, setRegNo] = useState<string>("");
+
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (name && regNo) {
+    if (name.trim() && regNo.trim()) {
       onLogin({ name, regNo });
     }
   };
@@ -32,17 +36,58 @@ export default function Login({ onLogin }) {
             style={styles.input}
             required
           />
-          <button type="submit" style={styles.button}>Start Exam</button>
+          <button type="submit" style={styles.button}>
+            Start Exam
+          </button>
         </form>
       </div>
     </div>
   );
 }
 
-const styles = {
-  container: { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#f0f2f5' },
-  card: { background: 'white', padding: '2rem', borderRadius: '10px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', width: '350px' },
-  title: { textAlign: 'center', marginBottom: '1.5rem', color: '#333' },
-  input: { width: '100%', padding: '12px', margin: '10px 0', border: '1px solid #ccc', borderRadius: '5px', fontSize: '16px' },
-  button: { width: '100%', padding: '12px', background: '#007bff', color: 'white', border: 'none', borderRadius: '5px', fontSize: '16px', cursor: 'pointer' },
+const styles: Record<string, React.CSSProperties> = {
+  container: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh",
+    background: "#f0f2f5",
+  },
+  card: {
+    background: "white",
+    padding: "2rem",
+    borderRadius: "10px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+    width: "350px",
+  },
+  title: {
+    textAlign: "center",
+    marginBottom: "1.5rem",
+    color: "#333",
+  },
+  input: {
+    width: "100%",
+    padding: "12px",
+    margin: "10px 0",
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+    fontSize: "16px",
+  },
+  button: {
+    width: "100%",
+    padding: "12px",
+    background: "#007bff",
+    color: "white",
+    border: "none",
+    borderRadius: "5px",
+    fontSize: "16px",
+    cursor: "pointer",
+    fontWeight: "bold",
+    transition: "background 0.2s",
+  },
+};
+
+// Optional hover effect
+styles.button[":hover"] = {
+  background: "#0056b3",
 };

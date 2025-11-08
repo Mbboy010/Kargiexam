@@ -1,12 +1,30 @@
 import { useState, useEffect } from "react";
 import { questions } from "../data/questions";
 
-export default function Exam({ subject, user, onFinish }) {
-  const [answers, setAnswers] = useState({});
-  const [timeLeft, setTimeLeft] = useState(4 * 60); // 7 minutes
-  const subjectQuestions = questions[subject];
+type Question = {
+  id: string;
+  question: string;
+  options: string[];
+  answer: string;
+};
 
-  // Timer: Auto-submit when time ends
+type User = {
+  name: string;
+  regNo: string;
+};
+
+interface ExamProps {
+  subject: string;
+  user: User;
+  onFinish: (score: number) => void;
+}
+
+export default function Exam({ subject, user, onFinish }: ExamProps) {
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [timeLeft, setTimeLeft] = useState<number>(4 * 60); // 4 minutes
+
+  const subjectQuestions: Question[] = questions[subject] || [];
+
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
@@ -18,12 +36,11 @@ export default function Exam({ subject, user, onFinish }) {
         return prev - 1;
       });
     }, 1000);
-
     return () => clearInterval(timer);
   }, []);
 
-  const handleAnswer = (qid, answer) => {
-    setAnswers({ ...answers, [qid]: answer });
+  const handleAnswer = (qid: string, answer: string) => {
+    setAnswers((prev) => ({ ...prev, [qid]: answer }));
   };
 
   const handleSubmit = () => {
@@ -34,7 +51,7 @@ export default function Exam({ subject, user, onFinish }) {
     onFinish(score);
   };
 
-  const formatTime = (seconds) => {
+  const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
@@ -52,18 +69,24 @@ export default function Exam({ subject, user, onFinish }) {
         </div>
         <div style={styles.timer}>
           Time Left:{" "}
-          <span style={{ color: timeLeft < 60 ? "red" : "#28a745", fontWeight: "bold" }}>
+          <span
+            style={{
+              color: timeLeft < 60 ? "red" : "#28a745",
+              fontWeight: "bold",
+            }}
+          >
             {formatTime(timeLeft)}
           </span>
         </div>
       </div>
 
-      {/* All Questions in Column */}
+      {/* All Questions */}
       <div style={styles.questionsContainer}>
         {subjectQuestions.map((q, index) => (
           <div key={q.id} style={styles.questionBlock}>
             <h3 style={styles.questionNumber}>
-              Question {index + 1} <span style={styles.marks}>(20 marks)</span>
+              Question {index + 1}{" "}
+              <span style={styles.marks}>(20 marks)</span>
             </h3>
             <p style={styles.questionText}>{q.question}</p>
             <div style={styles.options}>
@@ -93,8 +116,7 @@ export default function Exam({ subject, user, onFinish }) {
   );
 }
 
-// Styles
-const styles = {
+const styles: Record<string, React.CSSProperties> = {
   container: {
     padding: "1.5rem",
     maxWidth: "900px",
@@ -180,10 +202,4 @@ const styles = {
     boxShadow: "0 4px 12px rgba(40, 167, 69, 0.3)",
     transition: "all 0.2s",
   },
-};
-
-// Optional: Hover effect
-styles.submitBtn[':hover'] = {
-  background: '#218838',
-  transform: 'translateY(-1px)',
 };
