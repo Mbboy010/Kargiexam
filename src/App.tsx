@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import Login from "./components/Login";
 import SubjectSelection from "./components/SubjectSelection";
 import Exam from "./components/Exam";
@@ -9,11 +9,14 @@ export default function App() {
   const [screen, setScreen] = useState<"login" | "subjects" | "exam">("login");
   const [user, setUser] = useState<User | null>(null);
   const [completed, setCompleted] = useState<SubjectId[]>([]);
-  const [scores, setScores] = useState<Record<SubjectId, number>>({});
+  const [scores, setScores] = useState<Record<SubjectId, number>>({
+    maths: 0,
+    english: 0,
+    biology: 0,
+  });
   const [currentSubject, setCurrentSubject] = useState<SubjectId | null>(null);
 
   const handleLogin = (userData: User) => {
-    // Optionally add an id here if needed
     setUser(userData);
     setScreen("subjects");
   };
