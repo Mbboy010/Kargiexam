@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { questions as questionBank } from "../data/questions";
-import type { SubjectId, Question, User } from "../types";
+import type { SubjectId, Question, User } from "../data/types";
 
 interface ExamProps {
   subject: SubjectId;
