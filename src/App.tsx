@@ -1,39 +1,37 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Login from "./components/Login";
 import SubjectSelection from "./components/SubjectSelection";
 import Exam from "./components/Exam";
 import Result from "./components/Result";
-
-type Screen = "login" | "subjects" | "exam";
-type User = { name: string; id: string };
-type Scores = Record<string, number>;
+import type { User, SubjectId } from "./types";
 
 export default function App() {
-  const [screen, setScreen] = useState<Screen>("login");
+  const [screen, setScreen] = useState<"login" | "subjects" | "exam">("login");
   const [user, setUser] = useState<User | null>(null);
-  const [completed, setCompleted] = useState<string[]>([]);
-  const [scores, setScores] = useState<Scores>({});
-  const [currentSubject, setCurrentSubject] = useState<string | null>(null);
+  const [completed, setCompleted] = useState<SubjectId[]>([]);
+  const [scores, setScores] = useState<Record<SubjectId, number>>({});
+  const [currentSubject, setCurrentSubject] = useState<SubjectId | null>(null);
 
   const handleLogin = (userData: User) => {
+    // Optionally add an id here if needed
     setUser(userData);
     setScreen("subjects");
   };
 
-  const handleSelectSubject = (subject: string) => {
+  const handleSelectSubject = (subject: SubjectId) => {
     setCurrentSubject(subject);
     setScreen("exam");
   };
 
   const handleFinish = (score: number) => {
-    if (currentSubject) {
-      setScores({ ...scores, [currentSubject]: score });
-      setCompleted([...completed, currentSubject]);
-      setScreen("subjects");
-    }
+    if (!currentSubject) return;
+    setScores((prev) => ({ ...prev, [currentSubject]: score }));
+    setCompleted((prev) => (prev.includes(currentSubject) ? prev : [...prev, currentSubject]));
+    setCurrentSubject(null);
+    setScreen("subjects");
   };
 
-  const allCompleted = completed.length === 3;
+  const allCompleted = completed.length >= 3;
 
   return (
     <>
@@ -49,7 +47,7 @@ export default function App() {
           onTimeout={handleFinish}
         />
       )}
-      {allCompleted && <Result user={user} scores={scores} />}
+      {allCompleted && user && <Result user={user} scores={scores} />}
     </>
   );
 }

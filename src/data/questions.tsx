@@ -1,4 +1,7 @@
-export const questions = {
+// src/data/questions.ts
+import type { SubjectId, Question } from "../types";
+
+export const questions: Record<SubjectId, Question[]> = {
   maths: [
     { id: 1, question: "What is 2 + 2?", options: ["3", "4", "5", "6"], answer: "4" },
     { id: 2, question: "What is 5 × 3?", options: ["15", "10", "20", "8"], answer: "15" },

@@ -1,14 +1,15 @@
 import React from "react";
+import type { SubjectId } from "../types";
 
 interface Subject {
-  id: string;
+  id: SubjectId;
   name: string;
   color: string;
 }
 
 interface SubjectSelectionProps {
-  onSelect: (subjectId: string) => void;
-  completed?: string[];
+  onSelect: (subjectId: SubjectId) => void;
+  completed?: SubjectId[];
 }
 
 export default function SubjectSelection({
@@ -25,23 +26,27 @@ export default function SubjectSelection({
     <div style={styles.container}>
       <h2 style={styles.title}>Select Subject</h2>
       <div style={styles.grid}>
-        {subjects.map((sub) => (
-          <button
-            key={sub.id}
-            onClick={() => onSelect(sub.id)}
-            style={{
-              ...styles.card,
-              backgroundColor: sub.color,
-              opacity: completed.includes(sub.id) ? 0.7 : 1,
-            }}
-            disabled={completed.includes(sub.id)} // Optional: disable completed subjects
-          >
-            <h3>{sub.name}</h3>
-            {completed.includes(sub.id) && (
-              <span style={styles.done}>✓ Completed</span>
-            )}
-          </button>
-        ))}
+        {subjects.map((sub) => {
+          const isDone = completed.includes(sub.id);
+          return (
+            <button
+              key={sub.id}
+              onClick={() => onSelect(sub.id)}
+              style={{
+                ...styles.card,
+                backgroundColor: sub.color,
+                opacity: isDone ? 0.7 : 1,
+                cursor: isDone ? "not-allowed" : "pointer",
+              }}
+              disabled={isDone}
+              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.03)")}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+            >
+              <h3>{sub.name}</h3>
+              {isDone && <span style={styles.done}>✓ Completed</span>}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -61,8 +66,8 @@ const styles: Record<string, React.CSSProperties> = {
     color: "white",
     fontWeight: "bold",
     border: "none",
-    cursor: "pointer",
     position: "relative",
+    transition: "transform 0.12s",
   },
   done: {
     position: "absolute",

@@ -1,7 +1,9 @@
-import { useState, FormEvent } from "react";
+import React, { useState } from "react";
+import type { FormEvent } from "react";
+import type { User } from "../types";
 
 interface LoginProps {
-  onLogin: (userData: { name: string; regNo: string }) => void;
+  onLogin: (userData: User) => void;
 }
 
 export default function Login({ onLogin }: LoginProps) {
@@ -10,8 +12,10 @@ export default function Login({ onLogin }: LoginProps) {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (name.trim() && regNo.trim()) {
-      onLogin({ name, regNo });
+    const trimmedName = name.trim();
+    const trimmedReg = regNo.trim();
+    if (trimmedName && trimmedReg) {
+      onLogin({ name: trimmedName, regNo: trimmedReg });
     }
   };
 
@@ -36,7 +40,12 @@ export default function Login({ onLogin }: LoginProps) {
             style={styles.input}
             required
           />
-          <button type="submit" style={styles.button}>
+          <button
+            type="submit"
+            style={styles.button}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+          >
             Start Exam
           </button>
         </form>
@@ -83,11 +92,6 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: "16px",
     cursor: "pointer",
     fontWeight: "bold",
-    transition: "background 0.2s",
+    transition: "opacity 0.15s",
   },
-};
-
-// Optional hover effect
-styles.button[":hover"] = {
-  background: "#0056b3",
 };
