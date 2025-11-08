@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import type { FormEvent } from "react";
-import type { SubjectId, Question, User } from "../data/types";
+import type { User } from "../data/types";
 
 interface LoginProps {
   onLogin: (userData: User) => void;
