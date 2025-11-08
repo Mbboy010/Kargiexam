@@ -1,5 +1,5 @@
 import React from "react";
-import type { SubjectIdl, User } from "../data/types";
+import type { SubjectId, User } from "../data/types";
 
 interface ResultProps {
   user: User;
