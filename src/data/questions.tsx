@@ -1,5 +1,5 @@
 // src/data/questions.ts
-import type { SubjectId, Question } from "../types";
+import type { SubjectId, Question } from "./types";
 
 export const questions: Record<SubjectId, Question[]> = {
   maths: [
